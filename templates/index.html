@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+
+    <style>
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        input {
+            padding: 12px;
+            width: 250px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 320px;
+            border-radius: 12px;
+        }
+
+        .graphs {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .graph-card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 800px;
+        }
+
+        .graph-card img {
+            width: 100%;
+        }
+
+        .error {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌤️ Узнать погоду</h1>
+
+    <form method="POST">
+        <input type="text" name="city" placeholder="Введите город" required>
+        <button type="submit">Показать</button>
+    </form>
+
+    {% if weather %}
+    <div class="card">
+        {% if weather.error %}
+            <p class="error">{{ weather.error }}</p>
+        {% else %}
+            <h2>{{ weather.city }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
+
+            <p>🌡 Температура: {{ weather.temp }}°C</p>
+            <p>🤔 Ощущается как: {{ weather.feels_like }}°C</p>
+            <p>☁ {{ weather.description }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if forecast_graph or history_graph %}
+    <div class="graphs">
+
+        {% if forecast_graph %}
+        <div class="graph-card">
+            <h3>📈 Прогноз на 5 дней</h3>
+            <img src="{{ forecast_graph }}">
+        </div>
+        {% endif %}
+
+        {% if history_graph %}
+        <div class="graph-card">
+            <h3>📊 Температура по месяцам (2 года)</h3>
+            <img src="{{ history_graph }}">
+        </div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
