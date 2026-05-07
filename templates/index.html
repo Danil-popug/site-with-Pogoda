@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+
+    <style>
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        input {
+            padding: 12px;
+            width: 260px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .card, .top-card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 12px;
+        }
+
+        .card { width: 350px; }
+        .top-card { width: 400px; }
+
+        .graphs {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .graph-card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 800px;
+        }
+
+        .graph-card img {
+            width: 100%;
+        }
+
+        .error {
+            color: yellow;
+        }
+
+        .helper-box {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 320px;
+            margin: 10px auto;
+            text-align: left;
+        }
+    </style>
+
+    <script>
+        function toggleHelper() {
+            let box = document.getElementById("helperBox");
+            box.style.display = (box.style.display === "block") ? "none" : "block";
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🌤️ Узнать погоду</h1>
+
+    <!-- Поиск -->
+    <form method="POST">
+        <input type="text" name="city" placeholder="Введите город">
+        <button type="submit">Показать</button>
+    </form>
+
+    <!-- Фильтр + помощник -->
+    <form method="POST">
+        <input type="text" name="filter" placeholder="Введите фильтр">
+        <button type="submit">Фильтр</button>
+    </form>
+
+    <button onclick="toggleHelper()">❓ Помощник</button>
+
+    <div id="helperBox" class="helper-box">
+        <p>🔥 Самые жаркие города</p>
+        <p>❄ Самые холодные города</p>
+        <p>🌨 Самые снежные города</p>
+        <p>🌧 Самые дождливые города</p>
+    </div>
+
+    <!-- Погода -->
+    {% if weather %}
+    <div class="card">
+        {% if weather.error %}
+            <p class="error">{{ weather.error }}</p>
+        {% else %}
+            <h2>{{ weather.city }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
+            <p>Температура воздуха 🌡: {{ weather.temp }}°C</p>
+            <p>Как ощущается 🤔: {{ weather.feels_like }}°C</p>
+            <p>{{ weather.description }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Графики -->
+    {% if forecast_graph or history_graph %}
+    <div class="graphs">
+        {% if forecast_graph %}
+        <div class="graph-card">
+            <h3>📊 Прогноз</h3>
+            <img src="{{ forecast_graph }}">
+        </div>
+        {% endif %}
+
+        {% if history_graph %}
+        <div class="graph-card">
+            <h3>📈 История</h3>
+            <img src="{{ history_graph }}">
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- ТОП -->
+    {% if top_cities %}
+    <div class="top-card">
+        <h3>🌍 Топ городов</h3>
+        {% for c in top_cities %}
+            <p>{{ loop.index }}. {{ c.city }} — {{ c.temp }}°C — {{ c.description }}</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card">
+        <p>😔 Нет городов с таким типом погоды сейчас</p>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
