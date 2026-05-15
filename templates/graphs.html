@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Графики</title>
+
+    <style>
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        .graphs {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .graph-card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 800px;
+        }
+
+        .graph-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        📈 Графики погоды:
+        {{ city }}
+    </h1>
+
+    <div class="graphs">
+
+        {% if forecast_graph %}
+
+        <div class="graph-card">
+
+            <h2>
+                📊 Прогноз на 5 дней
+            </h2>
+
+            <img src="{{ forecast_graph }}">
+
+        </div>
+
+        {% endif %}
+
+        {% if history_graph %}
+
+        <div class="graph-card">
+
+            <h2>
+                📈 История температуры
+            </h2>
+
+            <img src="{{ history_graph }}">
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <a href="/">
+        <button>
+            ⬅ Назад
+        </button>
+    </a>
+
+</div>
+
+</body>
+</html>
