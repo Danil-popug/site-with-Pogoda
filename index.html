@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+
+    <style>
+
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        input {
+
+            padding: 12px;
+
+            width: 260px;
+
+            border-radius: 8px;
+
+            border: none;
+
+            font-size: 16px;
+
+            margin: 5px;
+        }
+
+        button {
+
+            padding: 12px 20px;
+
+            border-radius: 8px;
+
+            border: none;
+
+            background: #4CAF50;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+
+            background: #43a047;
+        }
+
+        .card,
+        .top-card,
+        .graph-card {
+
+            background: #4CAF50;
+
+            color: white;
+
+            padding: 20px;
+
+            margin: 20px auto;
+
+            border-radius: 14px;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            width: 380px;
+        }
+
+        .top-card {
+            width: 500px;
+        }
+
+        .graphs {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 30px;
+
+            flex-wrap: wrap;
+
+            margin-top: 30px;
+        }
+
+        .graph-card {
+            width: 800px;
+        }
+
+        .graph-card img {
+
+            width: 100%;
+
+            border-radius: 10px;
+        }
+
+        .helper-box {
+
+            display: none;
+
+            background: #4CAF50;
+
+            color: white;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            width: 320px;
+
+            margin: 10px auto;
+
+            text-align: left;
+        }
+
+        .error {
+            color: yellow;
+        }
+
+    </style>
+
+    <script>
+
+        function toggleHelper() {
+
+            let box =
+                document.getElementById(
+                    "helperBox"
+                );
+
+            if (box.style.display === "block") {
+
+                box.style.display = "none";
+
+            } else {
+
+                box.style.display = "block";
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌤️ Узнать погоду</h1>
+
+    <!-- ================= -->
+    <!-- ПОИСК ПОГОДЫ -->
+    <!-- ================= -->
+
+    <form action="/" method="POST">
+
+        <input
+            type="text"
+            name="city"
+            placeholder="Введите город"
+        >
+
+        <button type="submit">
+            Показать
+        </button>
+
+    </form>
+
+    <!-- ================= -->
+    <!-- ФИЛЬТР -->
+    <!-- ================= -->
+
+    <form action="/" method="POST">
+
+        <input
+            type="text"
+            name="filter"
+            placeholder="Введите фильтр"
+        >
+
+        <button type="submit">
+            Фильтр
+        </button>
+
+    </form>
+
+    <!-- ================= -->
+    <!-- ПОМОЩНИК -->
+    <!-- ================= -->
+
+    <button onclick="toggleHelper()">
+        ❓ Помощник
+    </button>
+
+    <div
+        id="helperBox"
+        class="helper-box"
+    >
+
+        <p>🔥 Самые жаркие города</p>
+
+        <p>❄ Самые холодные города</p>
+
+        <p>🌨 Самые снежные города</p>
+
+        <p>🌧 Самые дождливые города</p>
+
+    </div>
+
+    <!-- ================= -->
+    <!-- ПОГОДА -->
+    <!-- ================= -->
+
+    {% if weather %}
+
+    <div class="card">
+
+        {% if weather.error %}
+
+            <p class="error">
+                {{ weather.error }}
+            </p>
+
+        {% else %}
+
+            <h2>
+                {{ weather.city }}
+            </h2>
+
+            <img
+                src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png"
+            >
+
+            <p>
+                🌡 Температура:
+                {{ weather.temp }}°C
+            </p>
+
+            <p>
+                🤔 Ощущается как:
+                {{ weather.feels_like }}°C
+            </p>
+
+            <p>
+                ☁ {{ weather.description }}
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+    <!-- ================= -->
+    <!-- ГРАФИКИ -->
+    <!-- ================= -->
+
+    {% if forecast_graph or history_graph %}
+
+    <div class="graphs">
+
+        {% if forecast_graph %}
+
+        <div class="graph-card">
+
+            <h2>
+                📈 Прогноз на 5 дней
+            </h2>
+
+            <img src="{{ forecast_graph }}">
+
+        </div>
+
+        {% endif %}
+
+        {% if history_graph %}
+
+        <div class="graph-card">
+
+            <h2>
+                📊 История температуры
+            </h2>
+
+            <img src="{{ history_graph }}">
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+    <!-- ================= -->
+    <!-- ТОП ГОРОДОВ -->
+    <!-- ================= -->
+
+    {% if top_cities %}
+
+    <div class="top-card">
+
+        <h2>
+            🌍 Результат фильтра
+        </h2>
+
+        {% for c in top_cities %}
+
+            <p>
+
+                {{ loop.index }}.
+
+                {{ c.city }}
+
+                —
+
+                {{ c.temp }}°C
+
+                —
+
+                {{ c.description }}
+
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
