@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Фильтры</title>
+
+    <style>
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .top-card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 12px;
+            width: 500px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌍 Результат фильтра</h1>
+
+    <div class="top-card">
+
+        <h2>{{ filter_query }}</h2>
+
+        {% if top_cities %}
+
+            {% for c in top_cities %}
+
+                <p>
+                    {{ loop.index }}.
+                    {{ c.city }}
+                    —
+                    {{ c.temp }}°C
+                    —
+                    {{ c.description }}
+                </p>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                😔 Нет подходящих городов
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <a href="/">
+        <button>
+            ⬅ Назад
+        </button>
+    </a>
+
+</div>
+
+</body>
+</html>

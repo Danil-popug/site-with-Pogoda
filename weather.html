@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+
+    <style>
+        body {
+            font-family: Arial, "Segoe UI Emoji", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 12px;
+            width: 400px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .error {
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌤️ Погода</h1>
+
+    <div class="card">
+
+        {% if weather.error %}
+
+            <p class="error">
+                {{ weather.error }}
+            </p>
+
+        {% else %}
+
+            <h2>{{ weather.city }}</h2>
+
+            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
+
+            <p>
+                🌡 Температура:
+                {{ weather.temp }}°C
+            </p>
+
+            <p>
+                🤔 Ощущается как:
+                {{ weather.feels_like }}°C
+            </p>
+
+            <p>
+                ☁ {{ weather.description }}
+            </p>
+
+            <a href="/graphs/{{ weather.city }}">
+                <button>
+                    📊 Посмотреть графики
+                </button>
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    <a href="/">
+        <button>
+            ⬅ Назад
+        </button>
+    </a>
+
+</div>
+
+</body>
+</html>
